@@ -49,6 +49,12 @@ try {
         sh 'cd /opt/centreon-build && git pull && cd -'
         sh '/opt/centreon-build/jobs/web/3.4/mon-web-package.sh centos7'
       }
+    },
+    'opensuse423': {
+      node {
+        sh 'cd /opt/centreon-build && git pull && cd -'
+        sh '/opt/centreon-build/jobs/web/3.4/mon-web-package.sh opensuse423'
+      }
     }
     if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
       error('Package stage failure.');
