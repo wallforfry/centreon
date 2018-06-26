@@ -222,7 +222,34 @@ foreach ($jsdata as $k => $val) {
                 }
             }
             jQuery(".timepicker").timepicker();
-            jQuery(".datepicker").datepicker();
+
+            /* localization of datepicker for french */
+            var language = localStorage.getItem('locale');
+            var userLanguage = language.substring(0, 2);
+            if (userLanguage == "fr") {
+                $.datepicker.setDefaults(
+                    {
+                        closeText: 'Fermer',
+                        prevText: 'Précédent',
+                        nextText: 'Suivant',
+                        currentText: 'Aujourd\'hui',
+                        monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                        monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+                        dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+                        dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+                        dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                        weekHeader: 'Sem.',
+                        firstDay: 1,
+                        //dateFormat: 'dd mm yy',
+                        dateFormat: '@',
+                        //dateFormat: '!',
+                        isRTL: false,
+                        showMonthAfterYear: false
+                    }
+                    //$.datepicker.formatDate()
+                );
+            }
+            jQuery( ".datepicker" ).datepicker();
         }
     </script>
     </body>

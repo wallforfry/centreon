@@ -1,7 +1,7 @@
 <?php
 /*
- * Copyright 2005-2016 Centreon
- * Centreon is developped by : Julien Mathis and Romain Le Merlus under
+ * Copyright 2005-2018 Centreon
+ * Centreon is developed by : Julien Mathis and Romain Le Merlus under
  * GPL Licence 2.0.
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -35,20 +35,6 @@
  * SVN : $Id$
  *
  */
-
-/*require_once realpath(dirname(__FILE__) . "/../../../../../config/centreon.config.php");
-require_once _CENTREON_PATH_."www/class/centreonDB.class.php";
-
-/* Translation 
-require_once(_CENTREON_PATH_ . "www/class/centreonSession.class.php");
-require_once(_CENTREON_PATH_ . "www/class/centreon.class.php");
-require_once(_CENTREON_PATH_ . "www/class/centreonLang.class.php");
-
-/*CentreonSession::start();
-$oreon = $_SESSION["centreon"];
-$centreonLang = new CentreonLang(_CENTREON_PATH_, $oreon);
-$centreonLang->bindLang();*/
-
 
 /*
  * Create a XML node for each day stats (in $row) for a service, a servicegroup, an host or an hostgroup
@@ -90,9 +76,10 @@ function fillBuffer($statesTab, $row, $color)
     $Duration = _("Duration");
     $Alert = _("Alert");
     $detailPopup = '{table class=bulleDashtab}';
-    $detailPopup .= '{tr}{td class=bulleDashleft colspan=3}'.$Day.': '.
-        date("d/m/Y", $date_start) .' --  '.$Duration.': '.
+    $detailPopup .= '{tr}{td class=bulleDashleft colspan=3}' . $Day . ': {span class="isTimeline isDate"}';
+    $detailPopup .= $date_start . '{/span} --  ' . $Duration . ': '.
         CentreonDuration::toString($totalTime).'{/td}{td class=bulleDashleft }'.$Alert.'{/td}{/tr}';
+
     foreach ($statesTab as $key => $value) {
         $detailPopup .= '	{tr}' .
                         '		{td class=bulleDashleft style="background:'.$color[$value].';"  }'._($value).':{/td}' .

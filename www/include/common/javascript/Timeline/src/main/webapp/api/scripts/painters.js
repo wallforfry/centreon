@@ -368,5 +368,27 @@ Timeline.DurationEventPainter.prototype._showBubble = function(x, y, evt) {
     evt.fillTime(divTime, this._band.getLabeller());
     this._theme.event.bubble.timeStyler(divTime);
     div.appendChild(divTime);
-   */ 
+   */
+
+    // get locale and GMT preferences from localStorage
+    var userTimezone = localStorage.getItem('realTimezone');
+    var userLocale = localStorage.getItem('locale');
+    moment.locale(userLocale);
+
+    //creating a collection of occurences
+    jQuery(".isTimeline").each(function(index, element) {
+        var myElement = jQuery(element);
+
+        //forcing a numeric timestamp
+        var currentDate = parseInt(myElement.text()) * 1000;
+
+        //checking the choosen format
+        if (!isNaN(currentDate)) {
+            if (myElement.hasClass("isDate")) {
+                myElement.text(moment(currentDate).tz(userTimezone).format('LL'));
+            } else {
+                console.log("not a timestamp");
+            }
+        }
+    });
 };
