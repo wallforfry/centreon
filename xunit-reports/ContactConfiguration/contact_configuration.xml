@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="contact_configuration">
+  <testsuite name="ContactConfiguration" tests="1" skipped="0" failures="0" errors="0" time="125">
+    <testcase name="Change the properties of a contact" status="passed" time="125"></testcase>
+  </testsuite>
+</testsuites>

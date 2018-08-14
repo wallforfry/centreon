@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="command_configuration">
+  <testsuite name="Edit a command" tests="1" skipped="0" failures="0" errors="0" time="44">
+    <testcase name="Change the properties of a command" status="passed" time="44"></testcase>
+  </testsuite>
+</testsuites>

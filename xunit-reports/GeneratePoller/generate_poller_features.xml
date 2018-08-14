@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="generate_poller_features">
+  <testsuite name="Generate poller configuration" tests="1" skipped="0" failures="0" errors="0" time="27">
+    <testcase name="Generate poller configuration" status="passed" time="27"></testcase>
+  </testsuite>
+</testsuites>
