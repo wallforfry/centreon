@@ -3,6 +3,12 @@ stage('Source') {
     dir('centreon-web') {
       checkout scm
     }
+    script {
+      def testResults = findFiles(glob: 'centreon-web/xunit-reports/**/*.xml')
+      for(xml in testResults) {
+        touch xml.getPath()
+      }
+    }
     junit 'centreon-web/xunit-reports/**/*.xml'
   }
 }
