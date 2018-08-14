@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="acknowledgement">
+  <testsuite name="Meta-services acknowledgement" tests="1" skipped="0" failures="0" errors="0" time="119">
+    <testcase name="Acknowlegde normal services" status="passed" time="119"></testcase>
+  </testsuite>
+</testsuites>

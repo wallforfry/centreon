@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="downtime_recurrent">
+  <testsuite name="Testing a recurrent Downtime" tests="1" skipped="0" failures="0" errors="0" time="80">
+    <testcase name="Testing a recurrent Downtime on a HostGroup without any ServiceGroup created (Bugfix)" status="passed" time="80"></testcase>
+  </testsuite>
+</testsuites>
