@@ -9,7 +9,7 @@ stage('Source') {
         [$class: 'FailedThreshold', failureThreshold: '0'],
         [$class: 'SkippedThreshold', failureThreshold: '0']
       ],
-      tools: [[$class: 'PHPUnitType', pattern: 'centreon-web/xunit-reports/**/*.xml']]
+      tools: [[$class: 'PHPUnit', pattern: 'centreon-web/xunit-reports/**/*.xml']]
     ])
   }
 }
