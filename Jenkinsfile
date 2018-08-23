@@ -24,7 +24,14 @@ stage('Source') {
         touch xml.getPath()
       }
     }
-    junit 'centreon-web/xunit-reports/**/*.xml'
+    step([
+      $class: 'XUnitBuilder',
+      thresholds: [
+        [$class: 'FailedThreshold', failureThreshold: '0'],
+        [$class: 'SkippedThreshold', failureThreshold: '0']
+      ],
+      tools: [[$class: 'PHPUnitJunitHudsonTestType', pattern: 'centreon-web/xunit-reports/**/*.xml']]
+    ])
   }
 }
 if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
