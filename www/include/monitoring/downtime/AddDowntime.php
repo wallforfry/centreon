@@ -70,7 +70,14 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
     /*
      * Form begin
      */
-    $form = new HTML_QuickFormCustom('Form', 'POST', "?p=" . $p);
+    $form = new HTML_QuickFormCustom(
+        'Form',
+        'POST',
+        "?p=" . $p,
+        '',
+        array('onSubmit' => 'javascript:removeLocalisation(); return false;')
+        );
+    //array("onClick" => "javascript:window.location.href='?p=" . $p . "&o=c&id=" . $id . "'")
 
     /*
      * Indicator basic information
@@ -78,10 +85,14 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
     $redirect = $form->addElement('hidden', 'o');
     $redirect->setValue($o);
 
-    if (isset($_GET["host_id"]) && !isset($_GET["service_id"])) {
+    if (isset($_GET["host_id"]) &&
+        !isset($_GET["service_id"])
+    ) {
         $disabled = "disabled";
         $host_name = $hObj->getHostName($_GET['host_id']);
-    } elseif (isset($_GET["host_id"]) && isset($_GET["service_id"])) {
+    } elseif (isset($_GET["host_id"]) &&
+        isset($_GET["service_id"])
+    ) {
         $disabled = "disabled";
         $serviceParameters = $serviceObj->getParameters($_GET['service_id'], array('service_description'));
         $serviceDisplayName = $serviceParameters['service_description'];
@@ -194,14 +205,16 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
     );
 
     /* Host Parents */
-    $attrPoller1 = array_merge(
-        $attrPoller,
-        array(
-            'defaultDatasetRoute' => './api/internal.php?object=centreon_configuration_poller&action=defaultValues' .
-        '&target=resources&field=instance_id&id=' . $resource_id)
-    );
+    if (0 != $resource_id) {
+        $attrPoller1 = array_merge(
+            $attrPoller,
+            array(
+                'defaultDatasetRoute' => './api/internal.php?object=centreon_configuration_poller&action=defaultValues' .
+                    '&target=resources&field=instance_id&id=' . $resource_id)
+        );
 
-    $form->addElement('select2', 'poller_id', _("Pollers"), array(), $attrPoller1);
+        $form->addElement('select2', 'poller_id', _("Pollers"), array(), $attrPoller1);
+    }
 
     $chbx = $form->addElement(
         'checkbox',
@@ -213,12 +226,57 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
     if (isset($centreon->optGen['monitoring_dwt_fixed']) && $centreon->optGen['monitoring_dwt_fixed']) {
         $chbx->setChecked(true);
     }
-    $form->addElement('text', 'start', _("Start Time"), array('size' => 10, 'class' => 'datepicker'));
-    $form->addElement('text', 'end', _("End Time"), array('size' => 10, 'class' => 'datepicker'));
-    $form->addElement('text', 'start_time', '', array('size' => 5, 'class' => 'timepicker'));
-    $form->addElement('text', 'end_time', '', array('size' => 5, 'class' => 'timepicker'));
-    $form->addElement('text', 'duration', _("Duration"), array('size' => '15', 'id' => 'duration'));
-    $form->addElement('text', 'timezone_warning', _(" The timezone used is configured on your user settings"));
+    $form->addElement(
+        'text',
+        'start',
+        _("Start Time"),
+        array(
+            'size' => 10,
+            'class' => 'datepicker',
+            'data-date' => time()
+        )
+    );
+    $form->addElement(
+        'text',
+        'end',
+        _("End Time"),
+        array(
+            'size' => 10,
+            'class' => 'datepicker',
+            'data-date' => (time() + 7200)
+
+        )
+    );
+    $form->addElement(
+        'text',
+        'start_time',
+        '',
+        array('size' => 5,
+            'class' => 'timepicker',
+            'data-time' => time()
+        )
+    );
+    $form->addElement(
+        'text',
+        'end_time',
+        '',
+        array('size' => 5,
+            'class' => 'timepicker',
+            'data-time' => (time() + 7200)
+        )
+    );
+    $form->addElement(
+        'text',
+        'duration',
+        _("Duration"),
+        array('size' => '15',
+            'id' => 'duration'
+        )
+    );
+    $form->addElement(
+        'text',
+        'timezone_warning',
+        _(" The timezone used is configured on your user settings"));
 
     $defaultDuration = 3600;
     if (isset($centreon->optGen['monitoring_dwt_duration']) && $centreon->optGen['monitoring_dwt_duration']) {
@@ -252,10 +310,32 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
     $form->addRule('comment', _("Required Field"), 'required');
 
     $data = array();
-    $data["start"] = $centreonGMT->getDate("m/d/Y", time());
-    $data["end"] = $centreonGMT->getDate("m/d/Y", time() + 7200);
+    /*$data["start"] = $centreonGMT->getDate("m/d/Y", time());
+    $data["end"] = $centreonGMT->getDate("m/d/Y", time() + 7200);*/
     $data["start_time"] = $centreonGMT->getDate("G:i", time());
     $data["end_time"] = $centreonGMT->getDate("G:i", time() + 7200);
+
+    /* selecting output format */
+//    $lang = substr($centreon->user->get_lang(), 0, 2);
+
+    /*if ("fr" == $lang) {
+        $formatDate = "d/m/Y";
+        $formatTime = "G:i";
+    } else {
+        $formatDate = "m/d/Y";
+        $formatTime = "G:i";
+    }
+echo "<pre>";
+var_dump("formatDate");
+var_dump($formatDate);
+var_dump("formatTime");
+var_dump($formatTime);
+echo "</pre>";
+    /*$data["start"] = $centreonGMT->getDate($formatDate, time());
+    $data["end"] = $centreonGMT->getDate($formatDate, time() + 7200);
+    $data["start_time"] = $centreonGMT->getDate($formatTime, time());
+    $data["end_time"] = $centreonGMT->getDate($formatTime, time() + 7200);*/
+
     $data["host_or_hg"] = 1;
     $data["with_services"] = $centreon->optGen['monitoring_dwt_svc'];
 
@@ -329,6 +409,12 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
             $dt_w_services = true;
         }
 
+        /* re-formatting localised date to m/d/Y */
+/*        if ("m/d/Y" != $formatDate) {
+            $startDate = DateTime::createFromFormat($formatDate, $_POST["start"])->format('m/d/Y');
+            $endDate = DateTime::createFromFormat($formatDate, $_POST["end"])->format('m/d/Y');
+        }*/
+
         if (isset($values['downtimeType']) && $values['downtimeType']['downtimeType'] == 1) {
             /*
              * Set a downtime for only host
@@ -351,6 +437,7 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
                     $host_or_centreon_time
                 );
             }
+
         } elseif ($values['downtimeType']['downtimeType'] == 0 && isset($_POST['hostgroup_id']) && is_array($_POST['hostgroup_id'])) {
             /*
              * Set a downtime for hostgroup
@@ -403,9 +490,12 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
              * Set a downtime for a service group list
              */
             foreach ($_POST["servicegroup_id"] as $sg_id) {
-                $query = "SELECT host_id, service_id FROM services_servicegroups WHERE servicegroup_id = $sg_id";
-                $DBRESULT = $pearDBO->query($query);
-                while ($row = $DBRESULT->fetchRow()) {
+                $query = "SELECT host_id, service_id FROM services_servicegroups WHERE servicegroup_id = :sgId";
+                $stmt = $pearDBO->prepare($query);
+                $stmt->bindValue(':sgId', $sg_id, PDO::PARAM_INT);
+                $stmt->execute();
+
+                while ($row = $stmt->fetch()) {
                     $ecObj->addSvcDowntime(
                         $row["host_id"],
                         $row["service_id"],
@@ -442,6 +532,13 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
         }
         require_once("listDowntime.php");
     } else {
+
+
+echo "<pre>";
+var_dump("data");
+var_dump($data);
+echo "</pre>";
+
         /*
          * Smarty template Init
          */
@@ -482,6 +579,11 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
         }
         ?>
 
+        /* jQuery('[data-date]').each(function (idx, el) {
+            var date = jQuery(el).data('date');
+            console.log(new Date(date * 1000))
+            jQuery(el).datepicker('setDate', new Date(date * 1000));
+        }) */
     });
 
     function setDurationField() {
@@ -494,4 +596,43 @@ if (!$centreon->user->access->checkAction("host_schedule_downtime")
             durationField.disabled = false;
         }
     }
+/*
+    function removeLocalisation(idx, el) {
+        var dataDate = jQuery('input[name^=start]').value('data-date');
+
+        console.log(dateDate);
+
+        /*        var dataTime = jQuery(el).data('time');
+        if (date &&
+            dataTime
+        ) {
+            var d = new Date("2015-03-25");
+
+            var dateObj;
+            if (parseInt(date, 10) == date) {
+                dateObj = new Date(date * 1000);
+            } else {
+                dateObj = new Date(date);
+            }
+            jQuery(el).datepicker('setDate', date);
+        }*/
+    //}
+/*
+    jQuery(".datepicker").each(initDatePickerWithLocale);
+
+    function initDatePickerWithLocale(idx, el) {
+        jQuery(el).datepicker();
+        var date = jQuery(el).data('date');
+        if (date) {
+            var dateObj;
+            if (parseInt(date, 10) == date) {
+                dateObj = new Date(date * 1000);
+            } else {
+                dateObj = new Date(date);
+            }
+            jQuery(el).datepicker('setDate', date);
+        }
+*/
+
+
 </script>

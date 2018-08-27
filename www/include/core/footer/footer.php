@@ -160,7 +160,8 @@ if (!$min) {
 if ((isset($_GET["mini"]) && $_GET["mini"] == 1) ||
     (isset($_SESSION['fullScreen']) &&
         isset($_SESSION['fullScreen']['value']) &&
-        $_SESSION['fullScreen']['value'])
+        $_SESSION['fullScreen']['value']
+    )
 ) {
     ?>
     <script type="text/javascript">
@@ -240,6 +241,7 @@ foreach ($jsdata as $k => $val) {
     function initDatePickerWithLocale(idx, el) {
         jQuery(el).datepicker();
         var date = jQuery(el).data('date');
+
         if (date) {
             var dateObj;
             if (parseInt(date, 10) == date) {
