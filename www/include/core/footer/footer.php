@@ -218,12 +218,14 @@ foreach ($jsdata as $k => $val) {
         }
         jQuery(".timepicker").timepicker();
 
-        /* localisation of datepicker */
+        /* localisation for datepicker */
         var userLanguage = localStorage.getItem('locale').substring(0, 2);
 
-        if ("en" != userLanguage) {
+        if ("en" != userLanguage &&
+            "undefined" != userLanguage
+        ) {
             jQuery('<script>')
-                .attr('src', './include/common/javascript/datepicker-' + userLanguage + '.js')
+                .attr('src', './include/common/javascript/datepicker/datepicker-' + userLanguage + '.js')
                 .appendTo('body');
 
             setTimeout(function () {
@@ -232,7 +234,21 @@ foreach ($jsdata as $k => $val) {
                 }
             })
         }
-        jQuery(".datepicker").datepicker();
+        jQuery(".datepicker").each(initDatePickerWithLocale);
+    }
+
+    function initDatePickerWithLocale(idx, el) {
+        jQuery(el).datepicker();
+        var date = jQuery(el).data('date');
+        if (date) {
+            var dateObj;
+            if (parseInt(date, 10) == date) {
+                dateObj = new Date(date * 1000);
+            } else {
+                dateObj = new Date(date);
+            }
+            jQuery(el).datepicker('setDate', date);
+        }
     }
 
     <?php
